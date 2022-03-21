@@ -1,54 +1,92 @@
 package homework4;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Circle myCircle = new Circle(1);
-        Triangle myTriangle = new Triangle(new ArrayList<>());
-        Rectangular myRectangular = new Rectangular(new ArrayList<>());
-        //Menu
-        Scanner reader = new Scanner(System.in);
-        char yOrN;
-        double area;
-        double perimeter;
-        do {
-            String[] menu = {"Perimeter and area calculator:", "1.Circle", "2.Triangle", "3.Rectangular"};
-            for (String menuElements : menu) {
-                System.out.println(menuElements);
-            }
-            int option = reader.nextInt();
-            try {
-                switch (option) {
-                    case 1:
-                        area = myCircle.area();
-                        System.out.println("Area of a circle is: " + area);
-                        perimeter = myCircle.perimeter();
-                        System.out.println("Perimeter of a circle is: " + perimeter);
-                        break;
-                    case 2:
-                        area = myTriangle.area();
-                        System.out.println("Area of a triangle is: " + area);
-                        perimeter = myTriangle.perimeter();
-                        System.out.println("Perimeter of a triangle is: " + perimeter);
-                        break;
-                    case 3:
-                        area = myRectangular.area();
-                        System.out.println("Area of a rectangular is: " + area);
-                        perimeter = myRectangular.perimeter();
-                        System.out.println("Perimeter of a rectangular is: " + perimeter);
-                        break;
-                    default:
-                        System.out.println("You choose wrong action");
+    static Scanner reader = new Scanner(System.in);
 
-                }
-            } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
+    public static void main(String[] args) {
+        ArrayList<Shape> shapeEntries = new ArrayList<>();
+        char yOrN = ' ';
+
+        do {
+            int userOption = meniOption();
+            switch (userOption) {
+                case 1:
+                    int numberOfCalculations = repetitionsNumber();
+                    for (int i = 1; i < numberOfCalculations + 1; i++) {
+                        System.out.println("Enter radius of the circle number " + i);
+                        double radius = reader.nextDouble();
+                        shapeEntries.add(new Circle(radius));
+                    }
+                    break;
+                case 2:
+                    numberOfCalculations = repetitionsNumber();
+                    for (int i = 1; i < numberOfCalculations + 1; i++) {
+                        System.out.println("Triangle " + i);
+                        System.out.println("Enter the length of side a");
+                        double sideA = reader.nextDouble();
+                        System.out.println("Enter the length of side b");
+                        double sideB = reader.nextDouble();
+                        System.out.println("Enter the length of side c");
+                        double sideC = reader.nextDouble();
+                        shapeEntries.add(new Triangle(sideA, sideB, sideC));
+                    }
+                    break;
+                case 3:
+                    numberOfCalculations = repetitionsNumber();
+                    for (int i = 1; i < numberOfCalculations + 1; i++) {
+                        System.out.println("Rectangular number " + i);
+                        System.out.println("Enter the length of side a");
+                        double sideA = reader.nextDouble();
+                        System.out.println("Enter the length of side b");
+                        double sideB = reader.nextDouble();
+                        shapeEntries.add(new Rectangular(sideA, sideB));
+                    }
+                    break;
+                default:
+                    System.out.println("You choose wrong action!");
             }
-            System.out.println("Do you want another option?");
-            yOrN = reader.next().charAt(0);
-        } while (yOrN == 'y' || yOrN == 'Y');
+            System.out.println("Do you want another option from menu?");
+            yOrN = reader.next().toLowerCase().charAt(0);
+        } while (yOrN == 'y');
+        result(shapeEntries);
 
     }
+
+    public static int meniOption() {
+        String[] menu = {"Perimeter and area calculator:", "1.Circle", "2.Triangle", "3.Rectangular"};
+        for (String menuElements : menu) {
+            System.out.println(menuElements);
+        }
+        int option = reader.nextInt();
+        return option;
+    }
+
+    public static int repetitionsNumber() {
+        System.out.println("How many times do you want to calculate area and perimeter?");
+        int number = reader.nextInt();
+        if (number < 0) {
+            throw new NumberFormatException(" --- can't be a negative number");
+        }
+        return number;
+    }
+
+    public static void result(ArrayList<Shape> shapes) {
+        System.out.println("===================================" + "\nRESULT");
+        int k = 1;
+
+        for (Shape element : shapes) {
+            try {
+                System.out.println("Input number " + k + " -> " + "Area: " + element.area() + " | Perimeter: " + element.perimeter());
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            k++;
+        }
+    }
+
+
 }
